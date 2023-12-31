@@ -1,4 +1,4 @@
-import {keepPreviousData, useQuery} from "@tanstack/react-query"
+import {keepPreviousData, useInfiniteQuery} from "@tanstack/react-query"
 import axios from "axios"
 interface Todo {
     userId: number
@@ -8,26 +8,42 @@ interface Todo {
 }
 
 interface PageQuery {
-    page: number
     pageSize: number
 }
 
 export default function useTodos(query: PageQuery) {
-    const fetchTodos = async () => {
-        const res = await axios.get<Todo[]>(
-            "https://jsonplaceholder.typicode.com/todos",
-            {
-                params: {
-                    _start: (query.page - 1) * query.pageSize,
-                    _limit: query.pageSize,
-                },
-            }
-        )
-        return res.data
-    }
-    return useQuery<Todo[], Error>({
+    // const fetchTodos = async (pageParam: number) => {
+    //     const res = await axios.get<Todo[]>(
+    //         "https://jsonplaceholder.typicode.com/todos",
+    //         {
+    //             params: {
+    //                 _start: (pageParam - 1) * query.pageSize,
+    //                 _limit: query.pageSize,
+    //             },
+    //         }
+    //     )
+    //     return res.data
+    // }
+    return useInfiniteQuery<Todo[], Error>({
         queryKey: ["todos", query],
-        queryFn: fetchTodos,
+        initialPageParam: 1,
+        queryFn: async ({pageParam}) => {
+            console.log({pageParam})
+            const res = await axios.get<Todo[]>(
+                "https://jsonplaceholder.typicode.com/todos",
+                {
+                    params: {
+                        _start: ((pageParam as number) - 1) * query.pageSize,
+                        _limit: query.pageSize,
+                    },
+                }
+            )
+            return res.data
+        },
         placeholderData: keepPreviousData,
+        getNextPageParam: (lastPage, allPages) => {
+            console.log({lastPage, allPages})
+            return lastPage.length > 0 ? allPages.length + 1 : undefined
+        },
     })
 }
