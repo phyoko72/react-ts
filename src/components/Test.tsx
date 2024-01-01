@@ -16,7 +16,7 @@ export default function Test() {
         <>
             <h2>Test</h2>
             <ul>
-                {todos?.splice(0, 5).map((todo) => (
+                {todos?.map((todo) => (
                     <li key={todo.id}>
                         {todo.id} / {todo.title}
                     </li>

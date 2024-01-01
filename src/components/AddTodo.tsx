@@ -45,7 +45,7 @@ export default function AddTodo() {
                 <br />
                 <input type="text" name="todo" id="todo" ref={inputRef} />
                 <br />
-                <button>Add</button>
+                <button>{addTodo.isPending ? "Adding" : "Add"}</button>
             </form>
         </>
     )
