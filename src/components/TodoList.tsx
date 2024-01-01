@@ -2,7 +2,7 @@ import React from "react"
 import useTodos from "../hooks/useTodos"
 
 export default function TodoList() {
-    const pageSize = 80
+    const pageSize = 5
 
     const {
         data: todos,
@@ -14,6 +14,7 @@ export default function TodoList() {
 
     if (isLoading) return <h1>Loading...</h1>
     if (error) return <h1>{error.message}</h1>
+    console.log("todos@TodoList: ", todos)
     return (
         <>
             <h1>Todo List</h1>

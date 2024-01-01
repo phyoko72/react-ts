@@ -1,6 +1,6 @@
 import {keepPreviousData, useInfiniteQuery} from "@tanstack/react-query"
 import axios from "axios"
-interface Todo {
+export interface Todo {
     userId: number
     id: number
     title: string
@@ -45,5 +45,6 @@ export default function useTodos(query: PageQuery) {
             console.log({lastPage, allPages})
             return lastPage.length > 0 ? allPages.length + 1 : undefined
         },
+        staleTime: 10000,
     })
 }
