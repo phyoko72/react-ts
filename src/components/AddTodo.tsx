@@ -11,6 +11,19 @@ export default function AddTodo() {
                 .post<Todo>("https://jsonplaceholder.typicode.com/todos", todo)
                 .then((res) => res.data)
         },
+        // variables mean the data we sent to server
+        onMutate: (newTodo: Todo) => {
+            console.log({newTodo})
+
+            const previousTodos =
+                queryClient.getQueryData<Todo[]>(["todos"]) || []
+
+            queryClient.setQueryData<Todo[]>(["todos"], (todos) => {
+                return [newTodo, ...(todos || [])]
+            })
+            return {previousTodos}
+        },
+        //savedData is get from server, newData is created from client
         onSuccess: (savedData, newData) => {
             console.log({savedData, newData})
             // queryClient.invalidateQueries({
@@ -20,8 +33,14 @@ export default function AddTodo() {
             queryClient.setQueryData<Todo[]>(["todos"], (todos) => {
                 console.log("setQueryData: ", todos)
                 // update data immutable way
-                return [savedData, ...(todos || [])]
+                return todos?.map((todo) =>
+                    todo === newData ? savedData : todo
+                )
             })
+        },
+        onError: (error, newTodo, context) => {
+            if (!context) return
+            queryClient.setQueryData<Todo[]>(["todos"], context.previousTodos)
         },
     })
     const inputRef = useRef<HTMLInputElement>(null)
