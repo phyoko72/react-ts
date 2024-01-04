@@ -8,6 +8,8 @@ export default function UserList() {
     // if (isLoading) return <h1>Loading...</h1>
     // if (error) return <h1>{error.message}</h1>
 
+    console.log("USERLISTS: ", users)
+
     return (
         <div className=" my-6 *:my-3">
             <h1 className=" underline underline-offset-4 ">UserList</h1>

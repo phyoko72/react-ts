@@ -1,45 +1,49 @@
-import {useMutation, useQueryClient} from "@tanstack/react-query"
-import axios from "axios"
 import {FormEvent, useRef} from "react"
-import {Album} from "../hooks/useAlbums"
+import useAddAlbum from "../hooks/useAddAlbum"
 
 export default function AddAlbum() {
     const inputRef = useRef<HTMLInputElement>(null)
-    const queryClient = useQueryClient()
+    // const queryClient = useQueryClient()
 
-    const addAlbum = useMutation({
-        mutationFn: async (newAlbum: Album) => {
-            const res = await axios.post<Album>(
-                "https://jsonplaceholder.typicode.com/albums",
-                newAlbum
-            )
-            return res.data
-        },
-        onMutate: (newAlbum) => {
-            const previousAlbums = queryClient.getQueryData<Album[]>(["albums"])
-            queryClient.setQueryData<Album[]>(["albums"], (albums) => {
-                return [newAlbum, ...(albums || [])]
-            })
-            return {previousAlbums}
-        },
-        onSuccess: (fromServer, fromClient) => {
-            console.log({fromServer, fromClient})
-            // queryClient.setQueryData<Album[]>(["albums"], (albums) => {
-            //     return [fromServer, ...(albums || [])]
-            // })
-            queryClient.setQueryData<Album[]>(["albums"], (albums) => {
-                return albums?.map((album) =>
-                    album === fromClient ? fromServer : album
-                )
-            })
-        },
-        onError: (error, newAlbum, context) => {
-            if (!context) return
-            queryClient.setQueryData<Album[]>(
-                ["albums"],
-                context.previousAlbums
-            )
-        },
+    // const addAlbum = useMutation({
+    //     mutationFn: async (newAlbum: Album) => {
+    //         const res = await axios.post<Album>(
+    //             "https://jsonplaceholder.typicode.com/albums",
+    //             newAlbum
+    //         )
+    //         return res.data
+    //     },
+    //     onMutate: (newAlbum) => {
+    //         const previousAlbums = queryClient.getQueryData<Album[]>(["albums"])
+    //         queryClient.setQueryData<Album[]>(["albums"], (albums) => {
+    //             return [newAlbum, ...(albums || [])]
+    //         })
+    //         return {previousAlbums}
+    //     },
+    //     onSuccess: (fromServer, fromClient) => {
+    //         console.log({fromServer, fromClient})
+    //         // queryClient.setQueryData<Album[]>(["albums"], (albums) => {
+    //         //     return [fromServer, ...(albums || [])]
+    //         // })
+    //         queryClient.setQueryData<Album[]>(["albums"], (albums) => {
+    //             return albums?.map((album) =>
+    //                 album === fromClient ? fromServer : album
+    //             )
+    //         })
+    //     },
+    //     onError: (error, newAlbum, context) => {
+    //         if (!context) return
+    //         queryClient.setQueryData<Album[]>(
+    //             ["albums"],
+    //             context.previousAlbums
+    //         )
+    //     },
+    // })
+
+    const addAlbum = useAddAlbum(() => {
+        if (inputRef.current) {
+            inputRef.current.value = ""
+        }
     })
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {

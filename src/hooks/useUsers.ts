@@ -1,20 +1,23 @@
 import {useQuery} from "@tanstack/react-query"
-import axios from "axios"
+import APIClient from "../services/apiClient"
 export interface User {
     id: number
     name: string
     username: string
     email: string
 }
+
+const apiClient = new APIClient<User>("users")
+
 export default function useUsers(userId: string) {
-    const fetchUsers = async () => {
-        const res = await axios.get<User[] | User>(
-            "https://jsonplaceholder.typicode.com/users/" + userId
-        )
-        return res.data
-    }
+    // const fetchUsers = async () => {
+    //     const res = await axios.get<User[] | User>(
+    //         "https://jsonplaceholder.typicode.com/users/" + userId
+    //     )
+    //     return res.data
+    // }
     return useQuery<User[] | User, Error>({
         queryKey: userId ? ["users", userId] : ["users"],
-        queryFn: fetchUsers,
+        queryFn: apiClient.getAll,
     })
 }

@@ -1,5 +1,5 @@
 import {useQuery} from "@tanstack/react-query"
-import useTodos, {Todo} from "../hooks/useTodos"
+import {Todo} from "../hooks/useTodos"
 import axios from "axios"
 
 export default function Test() {
@@ -12,6 +12,7 @@ export default function Test() {
     //     },
     // })
     // console.log("todos@Test: ", todos)
+
     const {data: albums} = useQuery<Todo[], Error>({
         queryKey: ["albums"],
         queryFn: async () => {
