@@ -1,6 +1,4 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query"
-import APIClient from "../services/apiClient"
-
 import {CACHE_KEY_USERS} from "../lib/constants"
 import userService, {User} from "../services/userService"
 

@@ -1,8 +1,5 @@
 import {useQuery} from "@tanstack/react-query"
-import APIClient from "../services/apiClient"
-import {User} from "../services/userService"
-
-const apiClient = new APIClient<User>("users")
+import userService, {User} from "../services/userService"
 
 export default function useUsers(userId: string) {
     // const fetchUsers = async () => {
@@ -13,6 +10,6 @@ export default function useUsers(userId: string) {
     // }
     return useQuery<User[] | User, Error>({
         queryKey: userId ? ["users", userId] : ["users"],
-        queryFn: apiClient.getAll,
+        queryFn: userService.getAll,
     })
 }
