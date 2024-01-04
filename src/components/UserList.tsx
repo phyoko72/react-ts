@@ -1,5 +1,6 @@
 import {useState} from "react"
-import useUsers, {User} from "../hooks/useUsers"
+import useUsers from "../hooks/useUsers"
+import {User} from "../services/userService"
 
 export default function UserList() {
     const [userId, setuserId] = useState<string>("")

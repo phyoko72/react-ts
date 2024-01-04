@@ -1,14 +1,14 @@
 import {useMutation, useQueryClient} from "@tanstack/react-query"
 import APIClient from "../services/apiClient"
-import {User} from "./useUsers"
+
 import {CACHE_KEY_USERS} from "../lib/constants"
+import userService, {User} from "../services/userService"
 
 export default function useAddUser() {
-    const apiClient = new APIClient<User>("users")
     const queryClient = useQueryClient()
     return useMutation({
         // mutationFn: (user: User) => apiClient.post(user),
-        mutationFn: apiClient.post,
+        mutationFn: userService.post,
         onMutate: (newUser) => {
             const previousUsers =
                 queryClient.getQueryData<User[]>(CACHE_KEY_USERS)

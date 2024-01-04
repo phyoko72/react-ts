@@ -1,11 +1,6 @@
 import {useQuery} from "@tanstack/react-query"
 import APIClient from "../services/apiClient"
-export interface User {
-    id: number
-    name: string
-    username: string
-    email: string
-}
+import {User} from "../services/userService"
 
 const apiClient = new APIClient<User>("users")
 
